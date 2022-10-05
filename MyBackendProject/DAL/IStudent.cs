@@ -13,7 +13,7 @@ namespace MyBackendProject.DAL
         public Student Update(Student student);
         public void Delete(int id);
 
-        //mendaftarkan Student yang sudah ada ke Course yang sudah ada
-        public void AddStudenttoCourse(int StudentID, int CourseID);
+        ////mendaftarkan Student yang sudah ada ke Course yang sudah ada
+        //public void AddStudenttoCourse(int StudentID, int CourseID);
     }
 }

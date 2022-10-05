@@ -200,19 +200,19 @@ namespace MyBackendProject.Controllers
         }
 
 
-        [HttpPost("Course")]
-        public IActionResult AddStudenttoCourse(AddStudenttoCourseDTO addStudenttoCourseDto)
-        {
-            try
-            {
-                _student.AddStudenttoCourse(addStudenttoCourseDto.StudentID, addStudenttoCourseDto.CourseID);
-                return Ok($"Student id {addStudenttoCourseDto.StudentID} berhasil ditambahkan ke course {addStudenttoCourseDto.CourseID}");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost("WithCourse")]
+        //public IActionResult AddStudenttoCourse(AddStudenttoCourseDTO addStudenttoCourseDto)
+        //{
+        //    try
+        //    {
+        //        _student.AddStudenttoCourse(addStudenttoCourseDto.StudentID, addStudenttoCourseDto.CourseID);
+        //        return Ok($"Student id {addStudenttoCourseDto.StudentID} berhasil ditambahkan ke course {addStudenttoCourseDto.CourseID}");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
     }
 }
 

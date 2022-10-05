@@ -12,7 +12,6 @@ namespace MyBackendProject.Models
         public int Credits { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
 
-        public ICollection<Student> Students { get; set; }
-
+        public ICollection<Student> Students { get; set; } = new List<Student>();
     }
 }

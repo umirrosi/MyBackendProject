@@ -7,6 +7,7 @@ namespace MyBackendProject.DAL
     public class StudentEF : IStudent
     {
         private AppDbContext _dbcontext;
+        private Enrollment enrollment;
 
         public StudentEF(AppDbContext dbcontext)
         {
@@ -100,29 +101,24 @@ namespace MyBackendProject.DAL
             }
         }
 
-        public void AddStudenttoCourse(int StudentID, int CourseID)
-        {
-            try
-            {
-                var student = _dbcontext.students.FirstOrDefault(s => s.ID == StudentID);
-                var course = _dbcontext.courses.FirstOrDefault(c => c.CourseID == CourseID);
-                if (student != null && course != null)
-                {
-                    //course.students = new List<Student>();
-                    //object students = course.students;
-                    _dbcontext.students.Add(student);
-                    _dbcontext.courses.Add(course);
-                    _dbcontext.SaveChanges();
+        //public void AddStudenttoCourse(int StudentID, int CourseID)
+        //{
+        //    try
+        //    {
+        //        var student = _dbcontext.students.FirstOrDefault(s => s.ID == StudentID);
+        //        var course = _dbcontext.courses.FirstOrDefault(c => c.CourseID == CourseID);
+        //        if (student != null && course != null)
+        //        {
+        //            course.Students.Add(student);
+        //            _dbcontext.SaveChanges();
 
-                    _dbcontext.SaveChanges();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
 
     }
 }

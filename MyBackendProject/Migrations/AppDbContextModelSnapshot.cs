@@ -24,17 +24,17 @@ namespace MyBackendProject.Migrations
 
             modelBuilder.Entity("CourseStudent", b =>
                 {
-                    b.Property<int>("CourseID")
+                    b.Property<int>("CoursesCourseID")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentID")
+                    b.Property<int>("StudentsID")
                         .HasColumnType("int");
 
-                    b.HasKey("CourseID", "StudentID");
+                    b.HasKey("CoursesCourseID", "StudentsID");
 
-                    b.HasIndex("StudentID");
+                    b.HasIndex("StudentsID");
 
-                    b.ToTable("CourseStudent");
+                    b.ToTable("CourseStudent", (string)null);
                 });
 
             modelBuilder.Entity("MyBackendProject.Models.Course", b =>
@@ -51,7 +51,7 @@ namespace MyBackendProject.Migrations
 
                     b.HasKey("CourseID");
 
-                    b.ToTable("courses");
+                    b.ToTable("courses", (string)null);
                 });
 
             modelBuilder.Entity("MyBackendProject.Models.Enrollment", b =>
@@ -77,7 +77,7 @@ namespace MyBackendProject.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("Enrollment");
+                    b.ToTable("Enrollment", (string)null);
                 });
 
             modelBuilder.Entity("MyBackendProject.Models.Student", b =>
@@ -101,20 +101,20 @@ namespace MyBackendProject.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("students");
+                    b.ToTable("students", (string)null);
                 });
 
             modelBuilder.Entity("CourseStudent", b =>
                 {
                     b.HasOne("MyBackendProject.Models.Course", null)
                         .WithMany()
-                        .HasForeignKey("CourseID")
+                        .HasForeignKey("CoursesCourseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MyBackendProject.Models.Student", null)
                         .WithMany()
-                        .HasForeignKey("StudentID")
+                        .HasForeignKey("StudentsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
