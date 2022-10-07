@@ -19,6 +19,17 @@ namespace MyBackendProject.Helpers
             CreateMap<StudentGetDTO, Student>();
             CreateMap<Student, StudentGetDTO>();
 
+            CreateMap<Enrollment, EnrollmentGetFirstDTO>();
+            CreateMap<Enrollment, EnrollmentGetDTO>();
+            CreateMap<EnrollmentGetFirstDTO, Enrollment>();
+
+            CreateMap<Enrollment, EnrollmentAddDTO>();
+            CreateMap<EnrollmentAddDTO, Enrollment>();
+            //CreateMap<Enrollment, StudentWithCourseDto>();
+            //CreateMap<StudentWithCourseDto, Enrollment>();
+            //CreateMap<Enrollment, CourseGetDTO>();
+            //CreateMap<StudentWithCourseDto, CourseGetDTO>();
+
         }
     }
 }

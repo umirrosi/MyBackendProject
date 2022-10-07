@@ -1,4 +1,5 @@
-﻿using MyBackendProject.DTO;
+﻿using Microsoft.EntityFrameworkCore;
+using MyBackendProject.DTO;
 
 using MyBackendProject.Models;
 
@@ -101,24 +102,13 @@ namespace MyBackendProject.DAL
             }
         }
 
-        //public void AddStudenttoCourse(int StudentID, int CourseID)
-        //{
-        //    try
-        //    {
-        //        var student = _dbcontext.students.FirstOrDefault(s => s.ID == StudentID);
-        //        var course = _dbcontext.courses.FirstOrDefault(c => c.CourseID == CourseID);
-        //        if (student != null && course != null)
-        //        {
-        //            course.Students.Add(student);
-        //            _dbcontext.SaveChanges();
+        public IEnumerable<Student> GetStudentByCourseID(int CourseID)
+        {
+            var student = _dbcontext.students
+                .FromSqlInterpolated($"exec dbo.GetStudentByCourseID {CourseID}").ToList();
+            return student;
+        }
 
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
 
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyBackendProject.DAL;
 using MyBackendProject.DTO;
 using MyBackendProject.Models;
+using System.Collections;
 
 namespace MyBackendProject.Controllers
 {
@@ -22,15 +23,55 @@ namespace MyBackendProject.Controllers
         private AppDbContext _dbcontext;
 
         [HttpGet]
-        public IEnumerable<Enrollment> Get()
+        public IEnumerable<EnrollmentGetDTO> Get()
         {
             var results = _enrollment.GetAll();
-            var lstenrollments = _mapper.Map<IEnumerable<Enrollment>>(results);
+            var lstenrollments = _mapper.Map<IEnumerable<EnrollmentGetDTO>>(results);
             return lstenrollments;
         }
 
-        [HttpPost("WithCourse")]
+        [HttpGet("ByEnrollmentID")]
+        public EnrollmentGetFirstDTO Get(int EnrollmentID)
+        {
+            var result = _enrollment.GetById(EnrollmentID);
+            var enrollmentGetDto = _mapper.Map<EnrollmentGetFirstDTO>(result);
+            return enrollmentGetDto;
+        }
+
+
+        [HttpPost("StudentWithCourse")]
         public IActionResult Enrollment(EnrollmentAddDTO enrollmentDto)
+        {
+            try
+            {
+                var enrollment = new Enrollment
+                {
+                    //EnrollmentID = enrollmentDto.EnrollmentID,
+                    CourseID = enrollmentDto.CourseID,
+                    StudentID = enrollmentDto.StudentID,
+                    //Grade = enrollmentDto.Grade                
+                };
+
+                var newEnrollment = _enrollment.Insert(enrollment);
+
+                var enrollmentGetDto = new EnrollmentGetDTO
+                {
+                    //EnrollmentID = newEnrollment.EnrollmentID,
+                    CourseID = newEnrollment.CourseID,
+                    StudentID = newEnrollment.StudentID,
+                    //Grade = newEnrollment.Grade
+                };
+                return Ok($"StudentID {enrollmentGetDto.StudentID} berhasil dittambahkan ke Course {enrollmentGetDto.CourseID}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPost("NewStudentWithCourse")]
+        public IActionResult AddNewStudenttoCourse(EnrollmentAddDTO enrollmentDto)
         {
             try
             {
@@ -40,21 +81,20 @@ namespace MyBackendProject.Controllers
                     //EnrollmentID = enrollmentDto.EnrollmentID,
                     CourseID = enrollmentDto.CourseID,
                     StudentID = enrollmentDto.StudentID,
-                    Grade = enrollmentDto.Grade                
+
+                    //Grade = enrollmentDto.Grade                
                 };
 
-                var newEnrollment = _enrollment.Insert(enrollment);
+                var newEnrollment = _enrollment.AddNewStudenttoCourse(enrollment);
 
                 var enrollmentGetDto = new EnrollmentGetDTO
                 {
-                    EnrollmentID = newEnrollment.EnrollmentID,
+                    //EnrollmentID = newEnrollment.EnrollmentID,
                     CourseID = newEnrollment.CourseID,
                     StudentID = newEnrollment.StudentID,
-                    Grade = newEnrollment.Grade
+                    //Grade = newEnrollment.Grade
                 };
-                return Ok(enrollmentGetDto);
-
-                //return Ok($"StudentID {enrollmentDto.StudentID} berhasil dittambahkan ke Course {enrollmentDto.CourseID}");
+                return Ok($"New StudentID {enrollmentGetDto.StudentID} berhasil dittambahkan ke Course {enrollmentGetDto.CourseID}");
 
                 // return CreatedAtAction("Get", new { EnrollmentID = enrollmentDto.EnrollmentID }, enrollmentDto);
 
@@ -73,7 +113,7 @@ namespace MyBackendProject.Controllers
             {
                 var enrollment = _mapper.Map<Enrollment>(enrollmentDto);
                 var editEnrollment = _enrollment.Update(enrollment);
-                var enrollmentGetDto = _mapper.Map<StudentGetDTO>(editEnrollment);
+                var enrollmentGetDto = _mapper.Map<EnrollmentGetDTO>(editEnrollment);
                 return Ok(enrollmentGetDto);
             }
             catch (Exception ex)
@@ -82,7 +122,7 @@ namespace MyBackendProject.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("ByEnrollmentID")]
         public IActionResult Delete(int EnrollmentID)
         {
             try
@@ -96,6 +136,41 @@ namespace MyBackendProject.Controllers
             }
         }
 
+        [HttpGet("GetAllWithQuery")]
+        public IEnumerable<EnrollmentGetDTO> GetAllWithQuery()
+        {
+            var results = _enrollment.GetAllWithQuery();
+            var lstenrollments = _mapper.Map<IEnumerable<EnrollmentGetDTO>>(results);
+            return lstenrollments;
+        }
+
+        [HttpDelete("AllStudent/{CourseID}")]
+        public IActionResult DeleteEnrollmentForCourse(int CourseID)
+        {
+            try
+            {
+                _enrollment.DeleteEnrollmentForCourse(CourseID);
+                return Ok($"Semua student yang ada dalam CourseID {CourseID} berhasil di Hapus");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("AllCourse/{StudentID}")]
+        public IActionResult DeleteEnrollmentForStudent(int StudentID)
+        {
+            try
+            {
+                _enrollment.DeleteEnrollmentForStudent(StudentID);
+                return Ok($"Semua Course yang diambil oleh StudentID {StudentID} berhasil dihapus");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

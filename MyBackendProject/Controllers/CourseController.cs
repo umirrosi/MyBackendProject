@@ -164,5 +164,13 @@ namespace MyBackendProject.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("CourseByStudentID")]
+        public IEnumerable<CourseGetDTO> GetCourseByStudentID(int StudentID)
+        {
+            var course = _course.GetCourseByStudentID(StudentID);
+            var courseGetDTO = _mapper.Map<IEnumerable<CourseGetDTO>>(course);
+            return courseGetDTO;
+        }
     }
 }

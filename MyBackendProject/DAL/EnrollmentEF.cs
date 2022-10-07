@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyBackendProject.DTO;
 using MyBackendProject.Models;
+using System.Collections;
+using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MyBackendProject.DAL
 {
@@ -30,51 +33,29 @@ namespace MyBackendProject.DAL
             }
         }
 
-
-        //STUDENT WITH COURSE (POST)
-        public void Enrollment(int StudentID, int CourseID) 
-        {
-            try
-            {    
-                var course = _dbcontext.courses.FirstOrDefault(c => c.CourseID == CourseID);
-                var student = _dbcontext.students.FirstOrDefault(s => s.ID == StudentID);
-
-                if (student != null && course != null)
-                    //course.students.Add(student);
-                    //course.Enrollments.Add(enrollment);
-                    //_dbcontext.Add(deleteEnrollment);
-                    _dbcontext.SaveChanges();
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
         public IEnumerable<Enrollment> GetAll()
         {
             var results = _dbcontext.Enrollment.OrderBy(e => e.EnrollmentID).ToList();
             return results;
         }
 
-        public Enrollment GetByCourseId(int CourseID)
-        {
-            try
-            {
-                var result = _dbcontext.Enrollment.FirstOrDefault(e => e.CourseID == CourseID);
-                return result;
-            }
-            catch
-            {
-                throw new Exception($"Data Student tidak ditemukan");
-            }
-        }
+        //public Enrollment GetByCourseId(int CourseID)
+        //{
+        //    try
+        //    {
+        //        var results = _dbcontext.Enrollment.FirstOrDefault(e => e.CourseID == CourseID);
+        //        return results;
+        //    }
+        //    catch
+        //    {
+        //        throw new Exception($"Data Student tidak ditemukan");
+        //    }
+        //}
 
-        public IEnumerable<Enrollment> GetByGrade(string grade)
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<Enrollment> GetByGrade(string grade)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public Enrollment GetById(int EnrollmentID)
         {
@@ -89,19 +70,23 @@ namespace MyBackendProject.DAL
             }
         }
 
-        public Enrollment GetByStudentId(int StudentID)
-        {
-            try
-            {
-                var result = _dbcontext.Enrollment.FirstOrDefault(e => e.StudentID == StudentID);
-                return result;
-            }
-            catch
-            {
-                throw new Exception($"Data Student tidak ditemukan");
-            }
-        }
+        //public Enrollment GetByStudentId(int StudentID)
+        //{
+        //    try
+        //    {
+        //        var result = _dbcontext.Enrollment.FirstOrDefault(e => e.StudentID == StudentID);
+        //        //var result = (from e in _dbcontext.Enrollment
+        //        //              where e.StudentID == StudentID
+        //        //              select e).ToList();
+        //        return result;
+        //    }
+        //    catch
+        //    {
+        //        throw new Exception($"Data Student tidak ditemukan");
+        //    }
+        //}
 
+        //STUDENT WITH COURSE (POST)
         public Enrollment Insert(Enrollment enrollment)
         {
             try
@@ -123,7 +108,30 @@ namespace MyBackendProject.DAL
             }
         }
 
-        public Enrollment Update(Enrollment Enrollment)
+        //NEW STUDENT WITH COURSE (POST)
+        public Enrollment AddNewStudenttoCourse(Enrollment enrollment)
+        {
+            try
+            {
+                var course = _dbcontext.courses.FirstOrDefault(c => c.CourseID == enrollment.CourseID);
+                var student = _dbcontext.students.FirstOrDefault(s => s.ID == enrollment.StudentID);
+                _dbcontext.students.Add(student);
+
+                if (course != null)
+                {
+                    _dbcontext.Enrollment.Add(enrollment);
+                    _dbcontext.SaveChanges();
+                }
+
+                return enrollment;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public Enrollment Update(Enrollment enrollment)
         {
             try
             {
@@ -142,6 +150,50 @@ namespace MyBackendProject.DAL
             }
             catch (Exception ex)
             {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public IEnumerable<Enrollment> GetAllWithQuery()
+        {
+            //var enrollment = _dbcontext.Enrollment.FromSqlRaw("select * from Enrollment").ToList();
+            //return enrollment;
+            //try
+            //{
+            //    _dbcontext.Database.ExecuteSqlInterpolated($"exec dbo.DeleteEnrollmentForCourse {CourseID}");
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    throw new Exception(ex.Message);
+            //}
+            var enrollment = _dbcontext.Enrollment
+                .FromSqlInterpolated($"exec dbo.GetAllWithQuery").ToList();
+            return enrollment;
+        }
+
+        public void DeleteEnrollmentForCourse(int CourseID)
+        {
+            try
+            {
+                _dbcontext.Database.ExecuteSqlInterpolated($"exec dbo.DeleteEnrollmentForCourse {CourseID}");
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void DeleteEnrollmentForStudent(int StudentID)
+        {
+            try
+            {
+                _dbcontext.Database.ExecuteSqlInterpolated($"exec dbo.DeleteEnrollmentForStudent {StudentID}");
+            }
+            catch (Exception ex)
+            {
+
                 throw new Exception(ex.Message);
             }
         }

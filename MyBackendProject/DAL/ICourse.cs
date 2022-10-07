@@ -12,5 +12,7 @@ namespace MyBackendProject.DAL
         public Course Insert(Course course);
         public Course Update(Course course);
         public void Delete(int courseId);
+
+        public IEnumerable<Course> GetCourseByStudentID(int StudentID);
     }
 }

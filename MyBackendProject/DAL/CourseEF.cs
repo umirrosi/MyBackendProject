@@ -98,7 +98,13 @@ namespace MyBackendProject.DAL
             {
                 throw new Exception(ex.Message);
             }
+        }
 
+        public IEnumerable<Course> GetCourseByStudentID(int StudentID)
+        {
+            var course = _dbcontext.courses
+                .FromSqlInterpolated($"exec dbo.GetCourseByStudentID {StudentID}").ToList();
+            return course;
         }
     }
 }

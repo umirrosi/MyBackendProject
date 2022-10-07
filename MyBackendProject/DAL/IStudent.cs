@@ -15,5 +15,8 @@ namespace MyBackendProject.DAL
 
         ////mendaftarkan Student yang sudah ada ke Course yang sudah ada
         //public void AddStudenttoCourse(int StudentID, int CourseID);
+
+        public IEnumerable<Student> GetStudentByCourseID(int CourseID);
+
     }
 }

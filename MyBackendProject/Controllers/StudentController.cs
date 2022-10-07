@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBackendProject.DAL;
@@ -20,6 +21,7 @@ namespace MyBackendProject.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpGet]
         public IEnumerable<StudentGetDTO> Get()
         {
@@ -151,8 +153,9 @@ namespace MyBackendProject.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPut]
-        public IActionResult Put(StudentAddDTO studentDto)
+        public IActionResult Put(StudentGetDTO studentDto)
         {
             try
             {
@@ -213,6 +216,14 @@ namespace MyBackendProject.Controllers
         //        return BadRequest(ex.Message);
         //    }
         //}
+        [HttpGet("StudentByCourseID")]
+        public IEnumerable<StudentGetDTO> GetStudentByCourseID(int CourseID)
+        {
+            var student = _student.GetStudentByCourseID(CourseID);
+            var studentGetDTO = _mapper.Map<IEnumerable<StudentGetDTO>>(student);
+            return studentGetDTO;
+        }
+
     }
 }
 
