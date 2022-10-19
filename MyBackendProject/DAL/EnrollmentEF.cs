@@ -39,24 +39,6 @@ namespace MyBackendProject.DAL
             return results;
         }
 
-        //public Enrollment GetByCourseId(int CourseID)
-        //{
-        //    try
-        //    {
-        //        var results = _dbcontext.Enrollment.FirstOrDefault(e => e.CourseID == CourseID);
-        //        return results;
-        //    }
-        //    catch
-        //    {
-        //        throw new Exception($"Data Student tidak ditemukan");
-        //    }
-        //}
-
-        //public IEnumerable<Enrollment> GetByGrade(string grade)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public Enrollment GetById(int EnrollmentID)
         {
             try
@@ -70,21 +52,6 @@ namespace MyBackendProject.DAL
             }
         }
 
-        //public Enrollment GetByStudentId(int StudentID)
-        //{
-        //    try
-        //    {
-        //        var result = _dbcontext.Enrollment.FirstOrDefault(e => e.StudentID == StudentID);
-        //        //var result = (from e in _dbcontext.Enrollment
-        //        //              where e.StudentID == StudentID
-        //        //              select e).ToList();
-        //        return result;
-        //    }
-        //    catch
-        //    {
-        //        throw new Exception($"Data Student tidak ditemukan");
-        //    }
-        //}
 
         //STUDENT WITH COURSE (POST)
         public Enrollment Insert(Enrollment enrollment)
@@ -156,17 +123,6 @@ namespace MyBackendProject.DAL
 
         public IEnumerable<Enrollment> GetAllWithQuery()
         {
-            //var enrollment = _dbcontext.Enrollment.FromSqlRaw("select * from Enrollment").ToList();
-            //return enrollment;
-            //try
-            //{
-            //    _dbcontext.Database.ExecuteSqlInterpolated($"exec dbo.DeleteEnrollmentForCourse {CourseID}");
-            //}
-            //catch (Exception ex)
-            //{
-
-            //    throw new Exception(ex.Message);
-            //}
             var enrollment = _dbcontext.Enrollment
                 .FromSqlInterpolated($"exec dbo.GetAllWithQuery").ToList();
             return enrollment;
@@ -196,6 +152,13 @@ namespace MyBackendProject.DAL
 
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<IEnumerable<Enrollment>> Pagging(int skip, int take)
+        {
+            var results = await _dbcontext.Enrollment.Include(s => s.Course).Include(s => s.Student)
+               .Skip(skip).Take(take).ToArrayAsync();
+            return results;
         }
     }
 }

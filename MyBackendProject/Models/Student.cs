@@ -8,7 +8,5 @@
         public DateTime EnrollmentDate { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
 
-        //public ICollection<Course> Courses { get; set; }
-
     }
 }

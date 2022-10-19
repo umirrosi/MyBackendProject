@@ -47,11 +47,6 @@ namespace MyBackendProject.DAL
 
         }
 
-        //public IEnumerable<Course> GetByCredit(int credit)
-        //{
-        //    var quotes = _dbcontext.courses.Where(c => c.Credits==credit);
-        //    return quotes;
-        //}
 
         public IEnumerable<Course> GetByTitle(string title)
         {
@@ -73,10 +68,6 @@ namespace MyBackendProject.DAL
             }
         }
 
-        //public Course Update(Course course)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public Course Update(Course course)
         {

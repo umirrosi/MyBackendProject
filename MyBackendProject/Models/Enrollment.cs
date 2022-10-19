@@ -11,8 +11,5 @@ namespace MyBackendProject.Models
         public Course Course { get; set; }
         public Student Student { get; set; }
 
-        //public List<Course> Courses { get; set; }
-        //public List<Student> Students { get; set; }
-
     }
 }

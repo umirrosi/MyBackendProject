@@ -73,14 +73,6 @@ namespace MyBackendProject.Controllers
         }
 
 
-        //[HttpGet("credit")]
-        //public CourseGetDTO GetByCredit(int credit)
-        //{
-        //    var result = _course.GetByCredit(credit);
-        //    var courseDto = _mapper.Map<CourseGetDTO>(result);
-        //    return courseDto;
-        //}
-
         [HttpPost]
         public IActionResult Post(CourseAddDTO courseDto)
         {

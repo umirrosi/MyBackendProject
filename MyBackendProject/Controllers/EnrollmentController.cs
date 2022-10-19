@@ -11,12 +11,14 @@ namespace MyBackendProject.Controllers
     [ApiController]
     public class EnrollmentController : ControllerBase
     {
+        private IStudent _student;
         private IEnrollment _enrollment;
         private IMapper _mapper;
-        public EnrollmentController(IEnrollment enrollment, IMapper mapper)
+        public EnrollmentController(IEnrollment enrollment, IMapper mapper, IStudent student)
         {
             _enrollment = enrollment;
             _mapper = mapper;
+            _student = student;
         }
 
 
@@ -46,20 +48,16 @@ namespace MyBackendProject.Controllers
             {
                 var enrollment = new Enrollment
                 {
-                    //EnrollmentID = enrollmentDto.EnrollmentID,
                     CourseID = enrollmentDto.CourseID,
-                    StudentID = enrollmentDto.StudentID,
-                    //Grade = enrollmentDto.Grade                
+                    StudentID = enrollmentDto.StudentID,          
                 };
 
                 var newEnrollment = _enrollment.Insert(enrollment);
 
                 var enrollmentGetDto = new EnrollmentGetDTO
                 {
-                    //EnrollmentID = newEnrollment.EnrollmentID,
                     CourseID = newEnrollment.CourseID,
                     StudentID = newEnrollment.StudentID,
-                    //Grade = newEnrollment.Grade
                 };
                 return Ok($"StudentID {enrollmentGetDto.StudentID} berhasil dittambahkan ke Course {enrollmentGetDto.CourseID}");
             }
@@ -71,32 +69,35 @@ namespace MyBackendProject.Controllers
 
 
         [HttpPost("NewStudentWithCourse")]
-        public IActionResult AddNewStudenttoCourse(EnrollmentAddDTO enrollmentDto)
+        public IActionResult AddNewStudenttoCourse(string firstname, string lastname,EnrollmentAddDTO enrollmentDto)
         {
             try
             {
-                //_enrollment.Enrollment(enrollmentDto.StudentID, enrollmentDto.CourseID);
                 var enrollment = new Enrollment
                 {
-                    //EnrollmentID = enrollmentDto.EnrollmentID,
                     CourseID = enrollmentDto.CourseID,
-                    StudentID = enrollmentDto.StudentID,
-
-                    //Grade = enrollmentDto.Grade                
+                    StudentID = enrollmentDto.StudentID,               
                 };
 
-                var newEnrollment = _enrollment.AddNewStudenttoCourse(enrollment);
+                var student = new Student
+                {
+                    FirstMidName = firstname,
+                    LastName = lastname,              
+                };
+
+                var newStudent = _student.Insert(student); //insert ke database student
+
+                enrollment.StudentID = newStudent.ID;
+
+                var newEnrollment = _enrollment.Insert(enrollment);
 
                 var enrollmentGetDto = new EnrollmentGetDTO
                 {
-                    //EnrollmentID = newEnrollment.EnrollmentID,
+                    EnrollmentID = newEnrollment.EnrollmentID,
                     CourseID = newEnrollment.CourseID,
                     StudentID = newEnrollment.StudentID,
-                    //Grade = newEnrollment.Grade
                 };
                 return Ok($"New StudentID {enrollmentGetDto.StudentID} berhasil dittambahkan ke Course {enrollmentGetDto.CourseID}");
-
-                // return CreatedAtAction("Get", new { EnrollmentID = enrollmentDto.EnrollmentID }, enrollmentDto);
 
             }
             catch (Exception ex)
@@ -170,6 +171,16 @@ namespace MyBackendProject.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("Pagging/{skip}/{take}")]
+        public async Task<IEnumerable<EnrollmentGetDTO>> Pagging(int skip, int take)
+        {
+
+            var results = await _enrollment.Pagging(skip, take);
+            var enrollmentDTO = _mapper.Map<IEnumerable<EnrollmentGetDTO>>(results);
+
+            return enrollmentDTO;
         }
 
     }

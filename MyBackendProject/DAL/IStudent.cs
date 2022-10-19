@@ -12,11 +12,10 @@ namespace MyBackendProject.DAL
         public Student Insert(Student student);
         public Student Update(Student student);
         public void Delete(int id);
-
-        ////mendaftarkan Student yang sudah ada ke Course yang sudah ada
-        //public void AddStudenttoCourse(int StudentID, int CourseID);
-
         public IEnumerable<Student> GetStudentByCourseID(int CourseID);
+
+        //Paging
+        Task<IEnumerable<Student>> Pagging(int skip, int take);
 
     }
 }

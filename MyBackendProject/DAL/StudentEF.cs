@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyBackendProject.DTO;
 
 using MyBackendProject.Models;
@@ -109,6 +110,12 @@ namespace MyBackendProject.DAL
             return student;
         }
 
+        public async Task<IEnumerable<Student>> Pagging(int skip, int take)
+        {
+            var results = await _dbcontext.students
+               .Skip(skip).Take(take).ToArrayAsync();
+            return results;
+        }
 
     }
 }

@@ -2,26 +2,29 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyBackendProject.DAL;
 using MyBackendProject.DTO;
 using MyBackendProject.Models;
 
 namespace MyBackendProject.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
     {
         private readonly IStudent _student;
         private readonly IMapper _mapper;
+        private AppDbContext _dbcontext;
 
-        public StudentController(IStudent student, IMapper mapper)
+        public StudentController(IStudent student, IMapper mapper, AppDbContext dbcontext)
         {
             _student = student;
             _mapper = mapper;
+            _dbcontext = dbcontext;
         }
 
-        [Authorize]
         [HttpGet]
         public IEnumerable<StudentGetDTO> Get()
         {
@@ -203,25 +206,22 @@ namespace MyBackendProject.Controllers
         }
 
 
-        //[HttpPost("WithCourse")]
-        //public IActionResult AddStudenttoCourse(AddStudenttoCourseDTO addStudenttoCourseDto)
-        //{
-        //    try
-        //    {
-        //        _student.AddStudenttoCourse(addStudenttoCourseDto.StudentID, addStudenttoCourseDto.CourseID);
-        //        return Ok($"Student id {addStudenttoCourseDto.StudentID} berhasil ditambahkan ke course {addStudenttoCourseDto.CourseID}");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
         [HttpGet("StudentByCourseID")]
         public IEnumerable<StudentGetDTO> GetStudentByCourseID(int CourseID)
         {
             var student = _student.GetStudentByCourseID(CourseID);
             var studentGetDTO = _mapper.Map<IEnumerable<StudentGetDTO>>(student);
             return studentGetDTO;
+        }
+
+        [HttpGet("Pagging/{skip}/{take}")]
+        public async Task<IEnumerable<StudentGetDTO>> Pagging(int skip, int take)
+        {
+
+            var results = await _student.Pagging(skip, take);
+            var DTO = _mapper.Map<IEnumerable<StudentGetDTO>>(results);
+
+            return DTO;
         }
 
     }

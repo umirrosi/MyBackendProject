@@ -6,6 +6,5 @@ namespace MyBackendProject.DTO
     {
         public int CourseID { get; set; }
         public int StudentID { get; set; }
-        //public List<Course> Courses { get; set; }
     }
 }
